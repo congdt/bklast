@@ -1,49 +1,80 @@
+#
+# 	work
+#
+Xay dung lai mo hinh dua tren csic, 
+	- full request
+	- only query 
+
+Xay dung giao dien, hien thi 2 phan
+	- MOdsec phat hien ra 
+	- Mo hinh ML phat hien. 
+	- Check lai (verify) ket qua = tay | tren giao dien 
+
+Gia lap lai query truy van.
+
+
+
 day la trang web nao? 
 
 &amp; trong url co dc tinh nhu & ko? 
 
 Cac param co van de :
-	path: 
-		len > 30: 11/15
-		co 1 so cai path malicious
+	
 
-	smtemp: 
-		- chida,test,ount 
-
+	
 	GUID:
 		GET /index.php?option=com_k2/pp/chklocal.asp&PATH=&GUID=D277FF60-C81D-41D6-AA4E-260E4D69A10B&AUTO=0 HTTP/1.1
-
-	ID:
-		6 so
-
-	smsite: 
-		- ftx ...
-		- khong chua ki tu dac biet 
-
-	ver:
-		- chi chua: number, '.', alpha, '-'
-	p :
-		- number only
 
 	cat :  
 		- can hoi
 
-	q : No Prob
-
-	fileName, filename, name: 
-		- co cac link den ../wp-config.php
-
+	
 	searchword: 
 		- co dau hieu tan cong (and 1=1)
 		- da so la binh tuong
 
-	src:  
-		- chi co tan cong: ../../wp-config.php
+-----------------------
+	smtemp:  len < 10
+		- chida,test,ount 
 
-	start:
-		- chi chua number (3 so )
-	lang : 
+	smsite:  len < 10
+		- ftx ...
+		- alpha
+	view:    len < 15
+		- alpha + number
+
+	searchphrase: 
+		- any, exact, all => len < 10
+		- any and 1=1 ? co phai tan cong 
+
+	ver: len < 30 or 40 
+		- chi chua: number, '.', alpha, '-'
+	
+	option: len < 30
+		- nhieu tan cong
+		- alpha + '_' + number
+
+	task: len < 30 
+		- alpha + '.' + number
+	
+	lang : len < 10 
 		- alpha , '-' 
+
+----------------------------------------
+	path: 
+		len > 30: 11/15
+		co 1 so cai path malicious
+			+ ../../../wp-config.php
+			+ ../../
+
+	img :
+		=../wp-config.php/wp-admin/admin-ajax.php
+		=../wp-config.php
+		=../../../.my.cnf
+		=../../.my.cnf
+
+	fileName, filename, name: 
+		- co cac link den ../wp-config.php 
 
 	file: 
 		- ../conf/magmi.ini
@@ -52,8 +83,17 @@ Cac param co van de :
 		- /etc/passwd
 		- file=file:///C:/xampp/htdocs/wp-config.php
 		- file=file:///C:/wamp/www/wp-config.php 
-		- 
-	searchpharase:
-		- any, exact, all 
-		- any and 1=1 ? co phai tan cong 
+	
+	url, page
+		- /etc/passwd
+-----------------------------------------------------------
+	username:
+		- username = * (malicious)
+	password:
+		- password=*
+
+	
+	smid, limit, limitstart, id, p, start, src:
+		- number
+
 	

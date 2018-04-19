@@ -6,7 +6,11 @@ Modify:
 		- filter by values of parameters (no care about parameter's name)
 
 
+Logs:
+	apache: access_log
+
 Step 1: process_logs.py 
+
 	"""
 
 	"""
@@ -20,7 +24,14 @@ Step 1: process_logs.py
 		+ from preprocessed file, put them all together
 		+ output: data_no_label.txt
 
+Step 1.5: params_stat.py
+
+	"""
+		print all statistic info of params in request
+	"""
+
 Step 2: classify.py 
+
 	"""
 		classify data.
 			input : all file in folder: preprocess_logs/
@@ -56,6 +67,7 @@ Step 2: classify.py
 			- remain 
 
 Step 3: Build data 
+
 	"""
 		label data from file malicious & normal, 
 		convert to csv type, put them all together
@@ -70,12 +82,14 @@ Step 3: Build data
 
 
 Step 4: Training 
+
 	"""
 		training with input file: dataset.csv 
 
 	"""
 
 Step 5: Testing: predict.py 
+
 	"""
 		Test all request in given file 
 		Test one request per time  

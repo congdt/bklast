@@ -1,0 +1,59 @@
+day la trang web nao? 
+
+&amp; trong url co dc tinh nhu & ko? 
+
+Cac param co van de :
+	path: 
+		len > 30: 11/15
+		co 1 so cai path malicious
+
+	smtemp: 
+		- chida,test,ount 
+
+	GUID:
+		GET /index.php?option=com_k2/pp/chklocal.asp&PATH=&GUID=D277FF60-C81D-41D6-AA4E-260E4D69A10B&AUTO=0 HTTP/1.1
+
+	ID:
+		6 so
+
+	smsite: 
+		- ftx ...
+		- khong chua ki tu dac biet 
+
+	ver:
+		- chi chua: number, '.', alpha, '-'
+	p :
+		- number only
+
+	cat :  
+		- can hoi
+
+	q : No Prob
+
+	fileName, filename, name: 
+		- co cac link den ../wp-config.php
+
+	searchword: 
+		- co dau hieu tan cong (and 1=1)
+		- da so la binh tuong
+
+	src:  
+		- chi co tan cong: ../../wp-config.php
+
+	start:
+		- chi chua number (3 so )
+	lang : 
+		- alpha , '-' 
+
+	file: 
+		- ../conf/magmi.ini
+		- wp-config.php
+		- ./../app/etc/local.xml
+		- /etc/passwd
+		- file=file:///C:/xampp/htdocs/wp-config.php
+		- file=file:///C:/wamp/www/wp-config.php 
+		- 
+	searchpharase:
+		- any, exact, all 
+		- any and 1=1 ? co phai tan cong 
+	

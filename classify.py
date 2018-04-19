@@ -1,5 +1,6 @@
 import sys , os
 import time 
+import re
 
 HOME_PATH = '/media/gekko/FA8A195BBBBEC20C/bk10-2017.2/'
 #HOME_PATH = 'D:\\bk10-2017.2\\'
@@ -56,6 +57,7 @@ def classify():
 	fout_malicious.close()
 	
 	fout_remain.close()		
+
 
 
 def detail_classify():

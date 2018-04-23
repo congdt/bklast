@@ -2,4 +2,10 @@ data_no_label.txt
 dataset.csv
 param_set.txt
 Content.file
+build/
+logs/
+securitai-lstm-model.h5
+securitai-lstm-model.json
+securitai-lstm-weights.h5
+test_set.csv
 *.txt

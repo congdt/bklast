@@ -29,23 +29,6 @@ def train(csv_file):
     X = dataset[:,0]
     Y = dataset[:,1]
     
-    '''
-    for index, item in enumerate(X):
-        # Quick hack to space out json elements
-        # load dict into json object => return OrderedDict 
-        reqJson = json.loads(item, object_pairs_hook=OrderedDict)
-        
-        # delete these elements in reqJson
-        del reqJson['timestamp']
-        del reqJson['headers']
-        del reqJson['source']
-        del reqJson['route']
-        del reqJson['responsePayload']
-
-        # cac separator su dung la  ',' cho cac cap key-value khac nhau 
-        #                           ':' giua key & value
-        X[index] = json.dumps(reqJson, separators=(',', ':')) 
-	'''	
 	
     # tao tokenizer object, filter loai bo cac ki tu '\n\t'
 	#                       char_level=True -> moi ki tu dc coi la 1 token 
@@ -77,17 +60,22 @@ def train(csv_file):
     print len(X)
     #print '---------------------__X 3 ---------------------'
     #print X
-    #exit()
-    #max_log_length = 1024
+
     max_log_length = 1024
-    train_size = int(len(dataset) * .75)
+    train_size = int(len(dataset) * .70)
+    eval_size = int(len(dataset) * .05)
 
     # padding cac gia tri 0 (truoc or sau) 
     # de tat ca cac ptu trong X deu co do dai max_log_length 
     X_processed = sequence.pad_sequences(X, maxlen=max_log_length)
     
-    X_train, X_test = X_processed[0:train_size], X_processed[train_size:len(X_processed)]
-    Y_train, Y_test = Y[0:train_size], Y[train_size:len(Y)]
+    X_train = X_processed[0:train_size]
+    X_eval  = X_processed[train_size:train_size+eval_size]
+    X_test  = X_processed[train_size+eval_size:]
+
+    Y_train = Y[0:train_size]
+    Y_eval  = Y[train_size:train_size+eval_size]
+    Y_test  = Y[train_size+eval_size:]
     
     #print ("-------------------- X_train ------------------"	)
     #print Y_train
@@ -97,16 +85,17 @@ def train(csv_file):
     model = Sequential()
     model.add(Embedding(num_words, 32, input_length=max_log_length))
     model.add(Dropout(0.5))
-    model.add(LSTM(64, recurrent_dropout=0.5))
+    # change from 64 > 128 / 22-4
+    model.add(LSTM(128, recurrent_dropout=0.5))
     model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
 
-    model.fit(X_train, Y_train, validation_split=0.25, epochs=3, batch_size=128, callbacks=[tb_callback])
+    model.fit(X_train, Y_train, validation_split=0, epochs=3, batch_size=128, callbacks=[tb_callback])
 
     # Evaluate model
-    score, acc = model.evaluate(X_test, Y_test, verbose=1, batch_size=128)
+    score, acc = model.evaluate(X_eval, Y_eval, verbose=1, batch_size=128)
 
     print("Model Accuracy: {:0.2f}%".format(acc * 100))
 
@@ -115,6 +104,21 @@ def train(csv_file):
     model.save('securitai-lstm-model.h5')
     with open('securitai-lstm-model.json', 'w') as outfile:
         outfile.write(model.to_json())
+    
+    # Test model 
+    print "-----------------------------------------------"
+    print "Testing ....."
+    prediction = model.predict(X_test)
+    print "Prediction finish. "
+    print prediction
+    print Y_test 
+    count = 0
+    for i in range(len(prediction)):
+        pred = 1 if prediction[i][0] >= 0.5 else 0 
+        if Y_test[i] == pred:
+            count += 1 
+    print "Test Accuracy:", count*1.0/len(prediction), "%"
+
 
 if __name__ == '__main__':
     parser = optparse.OptionParser()
@@ -124,7 +128,8 @@ if __name__ == '__main__':
     if options.file is not None:
         csv_file = options.file
     else:
-        csv_file = 'data/dev-access.csv'
+        csv_file = 'csic_query_only_data.csv'
     start_time = time.time()
-    train(csv_file)
+    model = train(csv_file)
+
     print("time: ", time.time()-start_time)

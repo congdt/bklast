@@ -4,7 +4,8 @@ import time
 # convert to sequence
 # REQUEST_METHODS = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'CONNECT']
 
-
+FULL_REQUEST = 1
+QUERY_ONLY = 0
 
 def generate_data(infile, label, type , outfile):
 	"""
@@ -23,8 +24,10 @@ def generate_data(infile, label, type , outfile):
 			if first_line == '' :
 				print "EOF"
 				break
-			full_request += first_line.rstrip()	
+			start_index = first_line.find("http://localhost:8080") + len("http://localhost:8080")
 			method = first_line.split(' ')[0]
+			full_request += method + ' ' + first_line[start_index:].rstrip()
+			
 			while True:
 				line = fin.readline().rstrip()				# read other line
 				if len(line) == 0:							# 1st empty line
@@ -64,17 +67,17 @@ if __name__ == '__main__':
 
 	start = time.time()
 	# generate full 
-	generate_data(in_normal_test, 0, 1, out_normal_test)
-	generate_data(in_normal_train, 0, 1, out_normal_train)
-	generate_data(in_anormal, 1, 1, out_anormal)
+	generate_data(in_normal_test, 0, FULL_REQUEST, out_normal_test)
+	generate_data(in_normal_train, 0, FULL_REQUEST, out_normal_train)
+	generate_data(in_anormal, 1, FULL_REQUEST, out_anormal)
 	os.system("sort -R " + out_anormal + " " + out_normal_train + " " + out_normal_test + " -o csic_full_request_data.csv")
 	
 	print "time1:", time.time()-start 
 	start = time.time()
 	# generate query only 
-	generate_data(in_normal_test, 0, 0, out_normal_test)
-	generate_data(in_normal_train, 0, 0, out_normal_train)
-	generate_data(in_anormal, 1, 0, out_anormal)
+	generate_data(in_normal_test, 0, QUERY_ONLY, out_normal_test)
+	generate_data(in_normal_train, 0, QUERY_ONLY, out_normal_train)
+	generate_data(in_anormal, 1, QUERY_ONLY, out_anormal)
 	os.system("sort -R " + out_anormal + " " + out_normal_train + " " + out_normal_test + " -o csic_query_only_data.csv")
 	print "time2:", time.time()-start 
 
